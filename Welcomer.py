@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from discord.utils import get
 import os
+from CalendarTest import today
 
 intents = discord.Intents.default()
 intents.members = True 
@@ -55,7 +56,12 @@ async def test(ctx):
     view = Buttons()
     await ctx.send("This is a test message with a button!", view=view)
 
+#Calender
+@Welcomer.command()
+async def sendtoday(ctx):
+    await ctx.send(f"{today}")
+
 token = os.getenv("DISCORD_BOT_TOKEN")
 if not token:
-    raise ValueError("Bot token not found in environment variable DISCORD_BOT_TOKEN")
+    raise ValueError("Bot token not found in environment variable DISCORD_BOT_TOKEN. Please set it before running the bot.")
 Welcomer.run(token)
