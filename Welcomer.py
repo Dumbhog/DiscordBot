@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from discord.utils import get
 import os
-from CalendarTest import today
+from CalendarTest import today, tomorrow
 
 intents = discord.Intents.default()
 intents.members = True 
@@ -46,22 +46,22 @@ class Buttons(discord.ui.View):
     def __init__(self, *, timeout=180):
         super().__init__(timeout=timeout)
 
-    @discord.ui.button(label="Test Button", style=discord.ButtonStyle.primary)
-    async def test_button(self, button, interaction):
-        button.disabled = True  # Disable the button after it is clicked
-        await interaction.response.edit_message(view=self)
+    @discord.ui.button(label="Today", style=discord.ButtonStyle.primary)
+    async def today_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.send_message(f"{today}", ephemeral=True)
+
+    @discord.ui.button(label="Tomorrow", style=discord.ButtonStyle.primary)
+    async def tomorrow_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.send_message(f"{tomorrow}", ephemeral=True)
 
 @Welcomer.command()
-async def test(ctx):
+async def button_test(ctx):
     view = Buttons()
     await ctx.send("This is a test message with a button!", view=view)
-
-#Calender
-@Welcomer.command()
-async def sendtoday(ctx):
-    await ctx.send(f"{today}")
 
 token = os.getenv("DISCORD_BOT_TOKEN")
 if not token:
     raise ValueError("Bot token not found in environment variable DISCORD_BOT_TOKEN. Please set it before running the bot.")
-Welcomer.run(token)
+
+if __name__ == "__main__":
+    Welcomer.run(token)
