@@ -4,7 +4,8 @@ from discord.utils import get
 import os
 
 intents = discord.Intents.default()
-intents.members = True  # Enable the members intent
+intents.members = True 
+intents.message_content = True 
 
 Welcomer = commands.Bot(command_prefix='!', description='Welcomer Bot', intents=intents) 
 
@@ -35,8 +36,24 @@ async def on_member_join(member):
     else:
         print("Role 'Customers' not found!")
     embed = discord.Embed(title="Welcome to the server!", description=f"Welcome to the Server {member.mention}! You are the {member_count_text} member 💎", color=discord.Color.blue())
-    embed.set_thumbnail(url=member.avatar.url if member.avatar else member.default_avatar.url)
+    avatar_url = member.avatar.url if member.avatar else member.default_avatar.url
+    embed.set_thumbnail(url=avatar_url)
     await channel.send(embed=embed) 
+
+# Create a view for buttons
+class Buttons(discord.ui.View):
+    def __init__(self, *, timeout=180):
+        super().__init__(timeout=timeout)
+
+    @discord.ui.button(label="Test Button", style=discord.ButtonStyle.primary)
+    async def test_button(self, button, interaction):
+        button.disabled = True  # Disable the button after it is clicked
+        await interaction.response.edit_message(view=self)
+
+@Welcomer.command()
+async def test(ctx):
+    view = Buttons()
+    await ctx.send("This is a test message with a button!", view=view)
 
 token = os.getenv("DISCORD_BOT_TOKEN")
 if not token:
