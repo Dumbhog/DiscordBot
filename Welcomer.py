@@ -34,7 +34,7 @@ async def on_member_join(member):
         await member.add_roles(role)
     else:
         print("Role 'Customers' not found!")
-    embed = discord.Embed(title="Welcome to the server!", description=f"Welcome to the Sapphire Manor {member.mention}! You are the {member_count_text} member", color=discord.Color.blue())
+    embed = discord.Embed(title="Welcome to the server!", description=f"Welcome to the Server {member.mention}! You are the {member_count_text} member 💎", color=discord.Color.blue())
     embed.set_thumbnail(url=member.avatar.url if member.avatar else member.default_avatar.url)
     await channel.send(embed=embed) 
 
