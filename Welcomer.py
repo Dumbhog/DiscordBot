@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from discord.utils import get
 import os
-from CalendarTest import today, tomorrow
+from CalendarTest import today, tomorrow, dayafter1, dayafter2
 
 intents = discord.Intents.default()
 intents.members = True 
@@ -41,22 +41,46 @@ async def on_member_join(member):
     embed.set_thumbnail(url=avatar_url)
     await channel.send(embed=embed) 
 
-# Create a view for buttons
-class Buttons(discord.ui.View):
+
+class Bookings(discord.ui.View):
+    def __init__(self, *, timeout=180):
+        super().__init__(timeout=timeout)
+        link_button = discord.ui.Button(label="Option2", style=discord.ButtonStyle.link, url="https://github.com/Dumbhog")
+        self.add_item(link_button)
+
+    @discord.ui.button(label="Option1", style=discord.ButtonStyle.blurple)
+    async def Option1(self, interaction: discord.Interaction, button: discord.ui.Button):
+        view = Date()
+        await interaction.response.send_message("This is a test message with a button!", view=view)
+
+    @discord.ui.button(label="Cancel", style=discord.ButtonStyle.red)
+    async def Cancel(self, interaction: discord.Interaction, button: discord.ui.Button):
+        self.disable_all_items()
+        await interaction.response.edit_message(view=self)
+
+class Date(discord.ui.View):
     def __init__(self, *, timeout=180):
         super().__init__(timeout=timeout)
 
-    @discord.ui.button(label="Today", style=discord.ButtonStyle.primary)
+    @discord.ui.button(label=f"{today}", style=discord.ButtonStyle.primary)
     async def today_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await interaction.response.send_message(f"{today}", ephemeral=True)
+        await interaction.response.send_message(f"you're booked for {today}!", ephemeral=True)
 
-    @discord.ui.button(label="Tomorrow", style=discord.ButtonStyle.primary)
+    @discord.ui.button(label=f"{tomorrow}", style=discord.ButtonStyle.primary)
     async def tomorrow_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await interaction.response.send_message(f"{tomorrow}", ephemeral=True)
+        await interaction.response.send_message(f"you're booked for {tomorrow}!", ephemeral=True)
+
+    @discord.ui.button(label=f"{dayafter1}", style=discord.ButtonStyle.primary)
+    async def dayafter1_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.send_message(f"you're booked for {dayafter1}!", ephemeral=True)
+
+    @discord.ui.button(label=f"{dayafter2}", style=discord.ButtonStyle.primary)
+    async def dayafter2_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.send_message(f"you're booked for {dayafter2}!", ephemeral=True)
 
 @Welcomer.command()
 async def button_test(ctx):
-    view = Buttons()
+    view = Bookings()
     await ctx.send("This is a test message with a button!", view=view)
 
 token = os.getenv("DISCORD_BOT_TOKEN")
