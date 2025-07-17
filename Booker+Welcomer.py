@@ -16,7 +16,7 @@ async def on_ready():
 
 @Welcomer.event
 async def on_member_join(member):
-    channel = Welcomer.get_channel(1393266971105300651)  # Replace with your channel ID
+    channel = Welcomer.get_channel(12345679)  # Replace with your channel ID
     guild = member.guild
     member_count = guild.member_count
     member_count_string = str(member_count)
@@ -31,7 +31,7 @@ async def on_member_join(member):
     else:
         ord_index = "th"
     member_count_text = f"{member_count}{ord_index}"
-    role = get(member.guild.roles, name="Customers")  # Replace with your role name
+    role = get(member.guild.roles, name="BookerRole")  # Replace with your role name
     if role is not None:
         await member.add_roles(role)
     else:
@@ -45,7 +45,7 @@ async def on_member_join(member):
 class Bookings(discord.ui.View):
     def __init__(self, *, timeout=180):
         super().__init__(timeout=timeout)
-        link_button = discord.ui.Button(label="Option2", style=discord.ButtonStyle.link, url="https://github.com/Dumbhog")
+        link_button = discord.ui.Button(label="Option2", style=discord.ButtonStyle.link, url="https://github.com/Dumbhog") # Replace with your desired URL For l
         self.add_item(link_button)
 
     @discord.ui.button(label="Option1", style=discord.ButtonStyle.blurple)
@@ -55,8 +55,7 @@ class Bookings(discord.ui.View):
 
     @discord.ui.button(label="Cancel", style=discord.ButtonStyle.red)
     async def Cancel(self, interaction: discord.Interaction, button: discord.ui.Button):
-        self.disable_all_items()
-        await interaction.response.edit_message(view=self)
+        await interaction.message.delete()
 
 class Date(discord.ui.View):
     def __init__(self, *, timeout=180):
