@@ -69,21 +69,21 @@ class Booktype(discord.ui.View):
         await interaction.response.send_message("Please select a date:", view=view, ephemeral=True) # Select a date
 
     @discord.ui.button(label="Type 2", style=discord.ButtonStyle.primary)
-    async def Family(self, interaction: discord.Interaction, button: discord.ui.Button):
+    async def Type2(self, interaction: discord.Interaction, button: discord.ui.Button):
         view = Date()
         global booktype
         booktype = "Type 2"
         await interaction.response.send_message("Please select a date:", view=view, ephemeral=True) # Select a date
 
     @discord.ui.button(label="Type 3", style=discord.ButtonStyle.primary)
-    async def Luxury(self, interaction: discord.Interaction, button: discord.ui.Button):
+    async def Type3(self, interaction: discord.Interaction, button: discord.ui.Button):
         view = Date()
         global booktype
         booktype = "Type 3"
         await interaction.response.send_message("Please select a date:", view=view, ephemeral=True) # Select a date
 
     @discord.ui.button(label="Type 4", style=discord.ButtonStyle.primary)
-    async def Diamond(self, interaction: discord.Interaction, button: discord.ui.Button):
+    async def Type4(self, interaction: discord.Interaction, button: discord.ui.Button):
         view = Date()
         global booktype
         booktype = "Type 4"
@@ -96,22 +96,22 @@ class Date(discord.ui.View):
     @discord.ui.button(label=f"{today}", style=discord.ButtonStyle.primary)
     async def today_button(self, interaction: discord.Interaction, button: discord.ui.Button):
         member = interaction.user
-        await interaction.response.send_message(f"{member} has booked {booktype} for {today}!")
+        await interaction.response.send_message(f"{member} has made a {booktype} booking for {today}!")
 
     @discord.ui.button(label=f"{tomorrow}", style=discord.ButtonStyle.primary)
     async def tomorrow_button(self, interaction: discord.Interaction, button: discord.ui.Button):
         member = interaction.user
-        await interaction.response.send_message(f"{member} has booked {booktype} for {tomorrow}!")
+        await interaction.response.send_message(f"{member} has made a {booktype} booking for {tomorrow}!")
 
     @discord.ui.button(label=f"{dayafter1}", style=discord.ButtonStyle.primary)
     async def dayafter1_button(self, interaction: discord.Interaction, button: discord.ui.Button):
         member = interaction.user
-        await interaction.response.send_message(f"{member} has booked {booktype} for {dayafter1}!")
+        await interaction.response.send_message(f"{member} has made a {booktype} booking for {dayafter1}!")
 
     @discord.ui.button(label=f"{dayafter2}", style=discord.ButtonStyle.primary)
     async def dayafter2_button(self, interaction: discord.Interaction, button: discord.ui.Button):
         member = interaction.user
-        await interaction.response.send_message(f"{member} has booked {booktype} for {dayafter2}!")
+        await interaction.response.send_message(f"{member} has made a {booktype} booking for {dayafter2}!")
         
 @Welcomer.command()
 async def button_test(ctx):
