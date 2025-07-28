@@ -35,7 +35,7 @@ async def on_member_join(member):
     if role is not None:
         await member.add_roles(role)
     else:
-        print("Role 'Customers' not found!")
+        print("Role 'BookerRole' not found!") # Also replace with your role name
     embed = discord.Embed(title="Welcome to the server!", description=f"Welcome to the Server {member.mention}! You are the {member_count_text} member 💎", color=discord.Color.blue())
     avatar_url = member.avatar.url if member.avatar else member.default_avatar.url
     embed.set_thumbnail(url=avatar_url)
@@ -43,44 +43,80 @@ async def on_member_join(member):
 
 
 class Bookings(discord.ui.View):
-    def __init__(self, *, timeout=180):
-        super().__init__(timeout=timeout)
-        link_button = discord.ui.Button(label="Option2", style=discord.ButtonStyle.link, url="https://github.com/Dumbhog") # Replace with your desired URL For l
+    def __init__(self):
+        super().__init__()
+        link_button = discord.ui.Button(label="Option2", style=discord.ButtonStyle.link, url="https://github.com/Dumbhog") # Replace with your desired URL
         self.add_item(link_button)
 
     @discord.ui.button(label="Option1", style=discord.ButtonStyle.blurple)
     async def Option1(self, interaction: discord.Interaction, button: discord.ui.Button):
-        view = Date()
-        await interaction.response.send_message("This is a test message with a button!", view=view)
+        view = Booktype()
+        await interaction.response.send_message("Please select an option:", view=view, ephemeral=True) # Select an option
 
     @discord.ui.button(label="Cancel", style=discord.ButtonStyle.red)
     async def Cancel(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.message.delete()
 
+class Booktype(discord.ui.View):
+    def __init__(self):
+        super().__init__()
+
+    @discord.ui.button(label="Type 1", style=discord.ButtonStyle.primary)
+    async def Type1(self, interaction: discord.Interaction, button: discord.ui.Button):
+        view = Date()
+        global booktype
+        booktype = "Type 1"
+        await interaction.response.send_message("Please select a date:", view=view, ephemeral=True) # Select a date
+
+    @discord.ui.button(label="Type 2", style=discord.ButtonStyle.primary)
+    async def Family(self, interaction: discord.Interaction, button: discord.ui.Button):
+        view = Date()
+        global booktype
+        booktype = "Type 2"
+        await interaction.response.send_message("Please select a date:", view=view, ephemeral=True) # Select a date
+
+    @discord.ui.button(label="Type 3", style=discord.ButtonStyle.primary)
+    async def Luxury(self, interaction: discord.Interaction, button: discord.ui.Button):
+        view = Date()
+        global booktype
+        booktype = "Type 3"
+        await interaction.response.send_message("Please select a date:", view=view, ephemeral=True) # Select a date
+
+    @discord.ui.button(label="Type 4", style=discord.ButtonStyle.primary)
+    async def Diamond(self, interaction: discord.Interaction, button: discord.ui.Button):
+        view = Date()
+        global booktype
+        booktype = "Type 4"
+        await interaction.response.send_message("Please select a date:", view=view, ephemeral=True) # Select a date
+
 class Date(discord.ui.View):
-    def __init__(self, *, timeout=180):
-        super().__init__(timeout=timeout)
+    def __init__(self):
+        super().__init__()
 
     @discord.ui.button(label=f"{today}", style=discord.ButtonStyle.primary)
     async def today_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await interaction.response.send_message(f"you're booked for {today}!", ephemeral=True)
+        member = interaction.user
+        await interaction.response.send_message(f"{member} has booked {booktype} for {today}!")
 
     @discord.ui.button(label=f"{tomorrow}", style=discord.ButtonStyle.primary)
     async def tomorrow_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await interaction.response.send_message(f"you're booked for {tomorrow}!", ephemeral=True)
+        member = interaction.user
+        await interaction.response.send_message(f"{member} has booked {booktype} for {tomorrow}!")
 
     @discord.ui.button(label=f"{dayafter1}", style=discord.ButtonStyle.primary)
     async def dayafter1_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await interaction.response.send_message(f"you're booked for {dayafter1}!", ephemeral=True)
+        member = interaction.user
+        await interaction.response.send_message(f"{member} has booked {booktype} for {dayafter1}!")
 
     @discord.ui.button(label=f"{dayafter2}", style=discord.ButtonStyle.primary)
     async def dayafter2_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await interaction.response.send_message(f"you're booked for {dayafter2}!", ephemeral=True)
-
+        member = interaction.user
+        await interaction.response.send_message(f"{member} has booked {booktype} for {dayafter2}!")
+        
 @Welcomer.command()
 async def button_test(ctx):
     view = Bookings()
-    await ctx.send("This is a test message with a button!", view=view)
+    await ctx.send("Please select a type of booking!", view=view, delete_after=45) 
 
 token = os.getenv("DISCORD_BOT_TOKEN")
 if not token:
