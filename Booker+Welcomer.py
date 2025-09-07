@@ -16,7 +16,7 @@ async def on_ready():
 
 @Welcomer.event
 async def on_member_join(member):
-    channel = Welcomer.get_channel(12345679)  # Replace with your channel ID
+    channel = Welcomer.get_channel(1393266971105300651)  # Replace with your channel ID
     guild = member.guild
     member_count = guild.member_count
     member_count_string = str(member_count)
@@ -31,16 +31,12 @@ async def on_member_join(member):
     else:
         ord_index = "th"
     member_count_text = f"{member_count}{ord_index}"
-    role = get(member.guild.roles, name="BookerRole")  # Replace with your role name
-    if role is not None:
-        await member.add_roles(role)
-    else:
-        print("Role 'BookerRole' not found!") # Also replace with your role name
     embed = discord.Embed(title="Welcome to the server!", description=f"Welcome to the Server {member.mention}! You are the {member_count_text} member 💎", color=discord.Color.blue())
     avatar_url = member.avatar.url if member.avatar else member.default_avatar.url
     embed.set_thumbnail(url=avatar_url)
     await channel.send(embed=embed) 
 
+# Choose Booking Option
 
 class Bookings(discord.ui.View):
     def __init__(self):
@@ -56,6 +52,8 @@ class Bookings(discord.ui.View):
     @discord.ui.button(label="Cancel", style=discord.ButtonStyle.red)
     async def Cancel(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.message.delete()
+
+# Choose Booking Type
 
 class Booktype(discord.ui.View):
     def __init__(self):
@@ -89,6 +87,8 @@ class Booktype(discord.ui.View):
         booktype = "Type 4"
         await interaction.response.send_message("Please select a date:", view=view, ephemeral=True) # Select a date
 
+# Choose Booking Date
+
 class Date(discord.ui.View):
     def __init__(self):
         super().__init__()
@@ -112,12 +112,36 @@ class Date(discord.ui.View):
     async def dayafter2_button(self, interaction: discord.Interaction, button: discord.ui.Button):
         member = interaction.user
         await interaction.response.send_message(f"{member} has made a {booktype} booking for {dayafter2}!")
-        
+
 @Welcomer.command()
-async def button_test(ctx):
+async def book(ctx):
     view = Bookings()
     await ctx.send("Please select a type of booking!", view=view, delete_after=45) 
 
+# Ticket System
+@Welcomer.command()
+async def ticket(ctx):
+    
+    staff_role = discord.utils.get(ctx.guild.roles, name="Ticket-Viewer")  # Replace with your ticket support role name
+
+    overwrites = {
+        ctx.guild.default_role: discord.PermissionOverwrite(view_channel=False),
+        ctx.author: discord.PermissionOverwrite(view_channel=True, send_messages=True, read_message_history=True),
+    }
+    if staff_role:
+        overwrites[staff_role] = discord.PermissionOverwrite(view_channel=True, send_messages=True, read_message_history=True)
+
+    channel_name = f"{ctx.author.name}'s-ticket"
+    create_channel = await ctx.guild.create_text_channel(
+        name=channel_name,
+        overwrites=overwrites,
+        reason="Ticket created"
+    )
+    await create_channel.send(f"{ctx.author.name} has created a ticket! Access it in the channel menu.")
+
+# Run the bot
+
+    
 token = os.getenv("DISCORD_BOT_TOKEN")
 if not token:
     raise ValueError("Bot token not found in environment variable DISCORD_BOT_TOKEN. Please set it before running the bot.")

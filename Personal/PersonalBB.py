@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 from discord.utils import get
 import os
-from dotenv import load_dotenv, dotenv_values
 from CalendarTest import today, tomorrow, dayafter1, dayafter2
 
 intents = discord.Intents.default()
@@ -32,11 +31,6 @@ async def on_member_join(member):
     else:
         ord_index = "th"
     member_count_text = f"{member_count}{ord_index}"
-    role = get(member.guild.roles, name="Customers")  # Replace with your role name
-    if role is not None:
-        await member.add_roles(role)
-    else:
-        print("Role 'Customers' not found!")
     embed = discord.Embed(title="Welcome to the server!", description=f"Welcome to Sapphire Manor {member.mention}! You are the {member_count_text} member 💎", color=discord.Color.blue())
     avatar_url = member.avatar.url if member.avatar else member.default_avatar.url
     embed.set_thumbnail(url=avatar_url)
@@ -119,7 +113,6 @@ async def book(ctx):
     view = Bookings()
     await ctx.send("Please select a type of booking!", view=view, delete_after=45) 
 
-load_dotenv()
 token = os.getenv("DISCORD_BOT_TOKEN")
 if not token:
     raise ValueError("Bot token not found in .env file: 'DISCORD_BOT_TOKEN'. Please set it before running the bot.")
