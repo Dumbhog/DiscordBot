@@ -119,6 +119,17 @@ async def book(ctx):
     await ctx.send("Please select a type of booking!", view=view, delete_after=45) 
 
 # Ticket System
+
+class Ticket_buttons(discord.ui.View):
+    def __init__(self):
+        super().__init__()
+        ticket_link = discord.ui.Button(label="Link", style=discord.ButtonStyle.link, url="https://github.com/Dumbhog") # Replace with your desired URL
+        self.add_item(ticket_link)
+
+    @discord.ui.button(label="Close Ticket", style=discord.ButtonStyle.red)
+    async def Delete(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.channel.delete()
+
 @Welcomer.command()
 async def ticket(ctx):
     
@@ -137,7 +148,11 @@ async def ticket(ctx):
         overwrites=overwrites,
         reason="Ticket created"
     )
+    
     await create_channel.send(f"{ctx.author.name} has created a ticket! Access it in the channel menu.")
+
+    view = Ticket_buttons()
+    await create_channel.send("Use the buttons below to manage your ticket.", view=view)
 
 # Run the bot
 
