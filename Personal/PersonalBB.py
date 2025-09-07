@@ -36,6 +36,7 @@ async def on_member_join(member):
     embed.set_thumbnail(url=avatar_url)
     await channel.send(embed=embed) 
 
+# Choose Booking Type
 
 class Bookings(discord.ui.View):
     def __init__(self):
@@ -51,6 +52,8 @@ class Bookings(discord.ui.View):
     @discord.ui.button(label="Cancel", style=discord.ButtonStyle.red)
     async def Cancel(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.message.delete()
+
+# Choose Room Option
 
 class Roomtype(discord.ui.View):
     def __init__(self):
@@ -84,6 +87,8 @@ class Roomtype(discord.ui.View):
         roomtype = "the Diamond Suite"
         await interaction.response.send_message("Please select a date:", view=view, ephemeral=True) # Select a date
 
+# Choose Booking Date
+
 class Date(discord.ui.View):
     def __init__(self):
         super().__init__()
@@ -112,6 +117,44 @@ class Date(discord.ui.View):
 async def book(ctx):
     view = Bookings()
     await ctx.send("Please select a type of booking!", view=view, delete_after=45) 
+
+# Ticket System
+
+class Ticket_buttons(discord.ui.View):
+    def __init__(self):
+        super().__init__()
+        ticket_link = discord.ui.Button(label="Wedding Form", style=discord.ButtonStyle.link, url="https://forms.gle/FW1ajVXBwqibgLpp7") # Replace with your desired URL
+        self.add_item(ticket_link)
+
+    @discord.ui.button(label="Close Ticket", style=discord.ButtonStyle.red)
+    async def Delete(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.channel.delete()
+
+@Welcomer.command()
+async def ticket(ctx):
+    
+    staff_role = discord.utils.get(ctx.guild.roles, name="Ticket-Viewer")  # Replace with your ticket support role name
+
+    overwrites = {
+        ctx.guild.default_role: discord.PermissionOverwrite(view_channel=False),
+        ctx.author: discord.PermissionOverwrite(view_channel=True, send_messages=True, read_message_history=True),
+    }
+    if staff_role:
+        overwrites[staff_role] = discord.PermissionOverwrite(view_channel=True, send_messages=True, read_message_history=True)
+
+    channel_name = f"{ctx.author.name}'s-ticket"
+    create_channel = await ctx.guild.create_text_channel(
+        name=channel_name,
+        overwrites=overwrites,
+        reason="Ticket created"
+    )
+    
+    await create_channel.send(f"{ctx.author.name} has created a ticket! Access it in the channel menu.")
+
+    view = Ticket_buttons()
+    await create_channel.send("Use the buttons below to manage your ticket.", view=view)
+
+# Run the bot
 
 token = os.getenv("DISCORD_BOT_TOKEN")
 if not token:
